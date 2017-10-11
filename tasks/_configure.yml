@@ -1,36 +1,29 @@
 ---
-- name: create data directory
-  file:
-    path: "{{ consul_data_dir }}"
-    state: directory
-    mode: 0700
-    owner: "{{ consul_user_name }}"
-    group: "{{ consul_user_name }}"
-
-- name: create configuration directory
+- name: create consul directories
   file:
     path: "{{ item }}"
     state: directory
     mode: 0750
-    owner: root
+    owner: "root"
     group: "{{ consul_user_name }}"
   with_items:
+    - "{{ consul_data_dir }}"
     - "{{ consul_config_dir }}"
     - "{{ consul_config_dir }}/tls"
 
-- set_fact:
-    consul_node_tls_workdir: "{{ consul_local_tls_dir }}/{{ inventory_hostname }}"
-
-- name: local certificates generation
-  include: local_ca_certificate.yml
+- name: generate root certificate locally
+  include_tasks: "_local_ca_certificate.yml"
   delegate_to: localhost
   run_once: true
   become: no
 
-- name: certificate upload
+- name: root certificate upload
   copy:
     src: "{{ consul_local_tls_dir }}/consul-root.cer"
     dest: "{{ consul_config_dir }}/tls/consul-root.cer"
+    mode: 0640
+    owner: "root"
+    group: "{{ consul_user_name }}"
 
 - name: create node cert signing
   shell: >-
@@ -40,8 +33,8 @@
     -subj "{{ consul_node_cert_subj }}"
     -out {{ consul_config_dir }}/tls/consul-node.csr
     -keyout {{ consul_config_dir }}/tls/consul-node.key
-    && chown root:{{ consul_user_name}} *
-    && chmod 640 *
+    && chown root:{{ consul_user_name}} {{ consul_config_dir }}/tls/consul-node.*
+    && chmod 640 {{ consul_config_dir }}/tls/consul-node.*
   args:
     warn: no
     chdir: "{{ consul_config_dir }}/tls"
@@ -53,15 +46,16 @@
     dest: "{{ consul_node_tls_workdir }}/consul-node.csr"
     flat: yes
 
-- name: local node certificate generation
-  include: local_node_certificate.yml
+- name: generate node certificate from csr
+  include_tasks: _local_node_certificate.yml
   delegate_to: localhost
   become: no
 
-- copy:
+- name: upload certificate
+  copy:
     src: "{{ consul_node_tls_workdir }}/consul-node.cer"
     dest: "{{ consul_config_dir }}/tls/consul-node.cer"
-    owner: root
+    owner: "root"
     group: "{{ consul_user_name }}"
     mode: 0640
 

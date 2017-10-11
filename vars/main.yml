@@ -7,5 +7,4 @@ consul_ui_service_name: consul-ui
 
 consul_binary_path: "{{ consul_binary_basedir }}/consul"
 
-consul_ui_traefik_backend_server: >-
-  traefik.backends.{{ consul_ui_service_name }}.servers.{{ inventory_hostname }}
+consul_node_tls_workdir: "{{ consul_local_tls_dir }}/{{ inventory_hostname }}"
