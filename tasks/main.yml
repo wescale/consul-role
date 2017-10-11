@@ -1,8 +1,8 @@
 ---
 - assert:
     that:
-      - consul_ansible_bootstrap_group_name is defined and consul_ansible_bootstrap_group_name|length > 0
-    msg: "Variable 'consul_ansible_bootstrap_group_name' should be defined"
+      - consul_ansible_master_group_name is defined and consul_ansible_master_group_name|length > 0
+    msg: "Variable 'consul_ansible_master_group_name' should be defined"
 
 - assert:
     that:

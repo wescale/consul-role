@@ -65,6 +65,7 @@
     owner: "root"
     group: "{{ consul_user_name }}"
     mode: 0640
+  notify: restart consul
 
 - name: generate agent configuration
   template:
