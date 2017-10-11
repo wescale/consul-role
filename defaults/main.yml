@@ -19,8 +19,6 @@ consul_user_id: "801"
 
 consul_network_interface: eth0
 
-consul_mode: "node"
-
 consul_ansible_bootstrap_group: "{{ groups[consul_ansible_bootstrap_group_name] }}"
 
 consul_local_tls_dir: "{{ secrets_dir }}/consul/tls"

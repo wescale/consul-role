@@ -1,5 +1,13 @@
 ---
-- name: create consul directories
+- name: create consul data directory
+  file:
+    path: "{{ consul_data_dir }}"
+    state: directory
+    mode: 0750
+    owner: "{{ consul_user_name }}"
+    group: "{{ consul_user_name }}"
+
+- name: create consul config directories
   file:
     path: "{{ item }}"
     state: directory
@@ -7,7 +15,6 @@
     owner: "root"
     group: "{{ consul_user_name }}"
   with_items:
-    - "{{ consul_data_dir }}"
     - "{{ consul_config_dir }}"
     - "{{ consul_config_dir }}/tls"
 

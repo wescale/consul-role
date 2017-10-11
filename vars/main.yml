@@ -8,3 +8,6 @@ consul_ui_service_name: consul-ui
 consul_binary_path: "{{ consul_binary_basedir }}/consul"
 
 consul_node_tls_workdir: "{{ consul_local_tls_dir }}/{{ inventory_hostname }}"
+
+consul_mode: >-
+  {% if inventory_hostname in consul_ansible_bootstrap_group %}server{% else %}node{% endif %}
