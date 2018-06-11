@@ -74,7 +74,6 @@
     owner: root
     group: "{{ consul_user_name }}"
     mode: 0640
-    validate: consul validate %s
   notify: restart consul
 
 - name: generate default variables
