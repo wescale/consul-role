@@ -20,9 +20,6 @@
 
 - name: generate root certificate locally
   include_tasks: "_local_ca_certificate.yml"
-  delegate_to: localhost
-  run_once: true
-  become: no
 
 - name: root certificate upload
   copy:
@@ -55,8 +52,7 @@
 
 - name: generate node certificate from csr
   include_tasks: _local_node_certificate.yml
-  delegate_to: localhost
-  become: no
+
 
 - name: upload certificate
   copy:
@@ -83,3 +79,10 @@
     group: "{{ consul_user_name }}"
     mode: 0640
   notify: restart consul
+
+- template:
+    src: "server/ui.consul-service.json.j2"
+    dest: "/etc/consul.d/ui.consul-service.json"
+  notify: restart consul
+  tags: traefik
+  when: consul_mode == "server"

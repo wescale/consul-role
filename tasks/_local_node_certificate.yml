@@ -9,22 +9,30 @@
     path: "{{ consul_node_tls_workdir }}/consul-node.cer.index"
     state: touch
   changed_when: false
+  delegate_to: localhost
+  become: no
 
 - name: generate consulca configuration
   template:
     src: consulca.conf.j2
     dest: "{{ consul_node_tls_workdir }}/consulca.conf"
+  delegate_to: localhost
+  become: no
 
 - name: check certificate serial file
   stat:
     path: "{{ consul_node_tls_workdir }}/consul-node.cer.serial"
   register: node_ca_serial
+  delegate_to: localhost
+  become: no
 
 - name: init certificate serial file
   copy:
     dest: "{{ consul_node_tls_workdir }}/consul-node.cer.serial"
     content: "0A"
   when: not node_ca_serial.stat.exists
+  delegate_to: localhost
+  become: no
 
 - name: create node specific signed cert
   shell: >-
@@ -36,3 +44,5 @@
   args:
     chdir: "{{ consul_node_tls_workdir }}"
     creates: "{{ consul_node_tls_workdir }}/consul-node.cer"
+  delegate_to: localhost
+  become: no

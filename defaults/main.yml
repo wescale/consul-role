@@ -1,8 +1,8 @@
 ---
 consul_cache_dir: "/var/cache/ansible"
 
-consul_version: "1.1.0"
-consul_archive_sum: "09c40c8b5be868003810064916d8460bff334ccfb59a5046390224b27e052c45"
+consul_version: "1.2.0"
+consul_archive_sum: "85d84ea3f6c68d52549a29b00fd0035f72c2eabff672ae46ca643cb407ef94b4"
 
 consul_url_prefix: "https://releases.hashicorp.com/consul/{{ consul_version }}"
 consul_archive_name: "consul_{{ consul_version }}_linux_amd64.zip"

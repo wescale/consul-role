@@ -2,7 +2,7 @@
 #
 CONSUL_CONF_DIR="-config-dir={{ consul_config_dir }}"
 
-CONSUL_BIND="-bind={{ ansible_default_ipv4.address }}"
+CONSUL_BIND="-bind={{ ansible_default_ipv4.address }} -client=0.0.0.0"
 
 CONSUL_EXPECT="-bootstrap-expect={{ consul_ansible_bootstrap_group|length }}"
 
